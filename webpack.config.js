@@ -16,6 +16,7 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      inject: false,
       template: 'index.html',
     }),
 
