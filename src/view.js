@@ -14,7 +14,7 @@ const render = (elements, i18nextInstance) => (path, value) => {
       }
       break;
     case 'inputValue':
-    case 'rssUrls':
+    case 'feeds':
       elements.input.focus();
       elements.input.value = '';
       break;
