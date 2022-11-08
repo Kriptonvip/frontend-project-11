@@ -5,7 +5,7 @@ export default (url) => {
   const result = axios({
     method: 'get',
     url: allOriginUrl,
-    responseType: 'stream',
+    responseType: 'text',
   })
     .then((response) => {
       const data = JSON.parse(response.data).contents;
@@ -19,14 +19,17 @@ export default (url) => {
         const link = item.querySelector('link').textContent;
         const guid = item.querySelector('guid').textContent;
         const description = item.querySelector('description').textContent;
+        const pubDate = item.querySelector('pubDate').textContent;
         return {
           title,
           link,
           guid,
           description,
+          pubDate: new Date(pubDate).getTime(),
         };
       });
       const feed = {
+        url,
         title: feedName,
         description,
         items: posts,

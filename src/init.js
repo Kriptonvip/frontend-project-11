@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import ru from './locales/ru.js';
 import render from './view';
 import parser from './utils/parser';
+import updater from './utils/updater';
 
 export default async () => {
   // создание экземпляра i18next
@@ -25,12 +26,11 @@ export default async () => {
     inputIsValid: null,
     feedsUrls: [],
     feeds: [],
+    posts: [],
     inputValue: '',
-
   }, render(elements, i18nextInstance));
 
   // Controller
-
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -41,14 +41,15 @@ export default async () => {
     state.inputValue = url;
 
     schema.isValid(url).then((valid) => {
-      // valid ? (state.inputIsValid = true, state.feeds.push(url)) : state.inputIsValid = false;
       if (valid) {
-        const newFeed = parser(url);
-        newFeed.then((data) => {
-          state.feeds.push(data);
-        });
         state.inputIsValid = true;
         state.feedsUrls.push(url);
+        parser(url).then((data) => {
+          state.feeds.unshift(data);
+          state.posts = [...data.items, ...state.posts];
+        }).then(() => {
+          setTimeout(updater(state), 5000);
+        });
       } else {
         state.inputIsValid = false;
       }

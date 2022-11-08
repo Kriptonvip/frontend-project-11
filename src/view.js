@@ -13,22 +13,22 @@ const feedRender = (feeds) => {
             </ul>
         </div>`;
 };
-const postsRender = (feeds) => {
-  const postsHtml = feeds.map((feed) => feed.items.map((post) => `
+const postsRender = (posts) => {
+  const postsHtml = posts.map((post) => `
       <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0">
         <a href="${post.link}" class="fw-bold" data-id="12" target="_blank" rel="noopener noreferrer">
         ${post.title}
         </a>
-        <button type="button" class="btn btn-outline-primary btn-sm" data-id="12" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button></li>`).join('')).join('');
+        <button type="button" class="btn btn-outline-primary btn-sm" data-id="12" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button></li>`).join('');
   return `<div class="card-body">
       <h2 class="card-title h4">Посты</h2>
       </div>
       <ul class="list-group border-0 rounded-0">${postsHtml}</ul>`;
 };
 const render = (elements, i18nextInstance) => (path, value) => {
-  console.log('elements', elements);
-  console.log('path', path);
-  console.log('value', value);
+// console.log('elements', elements);
+//  console.log('path', path);
+//  console.log('value', value);
   switch (path) {
     case 'inputIsValid':
       elements.feedback.classList.remove('text-danger', 'text-success');
@@ -47,6 +47,8 @@ const render = (elements, i18nextInstance) => (path, value) => {
       break;
     case 'feeds':
       elements.feeds.innerHTML = feedRender(value);
+      break;
+    case 'posts':
       elements.posts.innerHTML = postsRender(value);
       break;
     default:
