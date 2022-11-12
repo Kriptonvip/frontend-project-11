@@ -14,6 +14,8 @@ export default (url, state) => {
       }
     })
     .catch((err) => {
+        console.log('AXIOS ERROR', err )
+        console.log(err.isAxiosError)
       if (err.isAxiosError) {
         state.error = 'network';
       } else if (err.isParsingError) {

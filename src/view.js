@@ -39,13 +39,12 @@ const formRender = (elements, value, i18next) => {
     case 'parsing':
     case 'notOneOf':
     case 'invalid':
+    case 'network':
       elements.feedback.classList.add('text-danger');
-
       elements.feedback.textContent = i18next.t(value);
       break;
     case 'success':
       elements.feedback.classList.add('text-success');
-
       elements.feedback.textContent = i18next.t(value);
       break;
     case 'failure':
