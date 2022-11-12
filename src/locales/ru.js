@@ -1,6 +1,11 @@
 export default {
   translation: {
-    validateErrors: 'Ссылка должна быть валидным URL',
-    sucsess: 'RSS успешно загружен',
+    required: 'Не должно быть пустым',
+    invalid: 'Ссылка должна быть валидным URL',
+    notOneOf: 'RSS уже существует',
+    success: 'RSS успешно загружен',
+    network: 'Ошибка сети',
+    parsing: 'Ресурс не содержит валидный RSS',
+    unknown: 'Неизвестная ошибка',
   },
 };
