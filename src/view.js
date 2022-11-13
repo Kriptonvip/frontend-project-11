@@ -1,19 +1,19 @@
-const feedRender = (feeds) => {
+const feedRender = (elements, feeds) => {
   const feedsHtml = feeds.map((feed) => `
   <li class="list-group-item border-0 border-end-0">
   <h3 class="h6 m-0">${feed.title}</h3>
   <p class="m-0 small text-black-50">${feed.description}</p>
   </li>`).join('');
-  return `<div class="card border-0">
-            <div class="card-body">
-                <h2 class="card-title h4">Фиды</h2>
-            </div>
-            <ul class="list-group border-0 rounded-0">
-                ${feedsHtml}
-            </ul>
-        </div>`;
+  elements.feeds.innerHTML = `<div class="card border-0">
+  <div class="card-body">
+      <h2 class="card-title h4">Фиды</h2>
+  </div>
+  <ul class="list-group border-0 rounded-0">
+      ${feedsHtml}
+  </ul>
+</div>`;
 };
-const postsRender = (posts) => {
+const postsRender = (elements, posts) => {
   const postsHtml = posts.map((post) => {
     const {
       linkClass, link, id, title,
@@ -27,10 +27,10 @@ const postsRender = (posts) => {
       </li>`
     );
   }).join('');
-  return `<div class="card-body">
-      <h2 class="card-title h4">Посты</h2>
-      </div>
-      <ul class="list-group border-0 rounded-0">${postsHtml}</ul>`;
+  elements.posts.innerHTML = `<div class="card-body">
+  <h2 class="card-title h4">Посты</h2>
+  </div>
+  <ul class="list-group border-0 rounded-0">${postsHtml}</ul>`;
 };
 
 const formRender = (elements, value, i18next) => {
@@ -83,10 +83,10 @@ const render = (elements, i18next) => (path, value) => {
       }
       break;
     case 'feeds':
-      elements.feeds.innerHTML = feedRender(value);
+      feedRender(elements, value);
       break;
     case 'posts':
-      elements.posts.innerHTML = postsRender(value);
+      postsRender(elements, value);
       break;
     case 'UIState.currentPost':
       modalRender(elements, value);

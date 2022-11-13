@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { uniqueId } from 'lodash';
 
 const getProxyUrl = (url) => {
   const proxiedUrl = new URL('/get', 'https://allorigins.hexlet.app');
@@ -32,8 +31,6 @@ const getPosts = (doc) => {
     return {
       title,
       link,
-      linkClass: 'fw-bold',
-      id: uniqueId(),
       description,
       pubDate: new Date(pubDate).getTime(),
     };

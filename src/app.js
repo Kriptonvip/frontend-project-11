@@ -5,9 +5,9 @@ import ru from './locales/ru';
 import render from './view';
 import addNewChannel from './utils/addNewChannel';
 import writeToModal from './utils/modal';
+import updater from './utils/updater';
 
 export default async () => {
-  // создание экземпляра i18next
   const i18nextInstance = i18next.createInstance();
   await i18nextInstance.init({
     lng: 'ru',
@@ -25,7 +25,7 @@ export default async () => {
     modalBody: document.querySelector('.modal-body'),
     readFullPost: document.querySelector('.full-article'),
   };
-    // Model
+
   const state = onChange({
     status: null,
     feeds: [],
@@ -43,7 +43,7 @@ export default async () => {
       url: () => 'invalid',
     },
   });
-  // Controller
+
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
     state.status = 'pending';
@@ -57,7 +57,6 @@ export default async () => {
       .catch((err) => {
         const { errors } = err;
         [state.error] = errors;
-        // console.log('ERRORS schema', err);
         state.status = 'done';
       });
   });
@@ -67,4 +66,5 @@ export default async () => {
       writeToModal(id, state);
     }
   });
+  updater(state);
 };

@@ -1,4 +1,5 @@
 import parser from './parser';
+import postsNormalize from './postsNormalize';
 
 const getLastUpdateTime = (state) => {
   const pubTimeList = state.posts.map((post) => post.pubDate);
@@ -14,7 +15,8 @@ const iter = (state) => state.feeds.forEach((feed) => {
       const LastUpdateTime = getLastUpdateTime(state);
       return postTime > LastUpdateTime;
     });
-    state.posts = [...postsArr, ...state.posts];
+    const postsWithId = postsNormalize(postsArr);
+    state.posts = [...postsWithId, ...state.posts];
   }).catch((error) => {
     console.log(`Updater error ${error}`);
   });
