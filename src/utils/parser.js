@@ -32,7 +32,7 @@ const getPosts = (doc) => {
       title,
       link,
       description,
-      pubDate: new Date(pubDate).getTime(),
+      // pubDate: new Date(pubDate).getTime(),
     };
   });
   return posts;
