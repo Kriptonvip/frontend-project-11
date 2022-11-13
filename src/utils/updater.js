@@ -12,8 +12,8 @@ const iter = (state) => state.feeds.forEach((feed) => {
     }
     const postsArr = data.posts.filter((post) => {
       const postTime = new Date(post.pubDate).getTime();
-      const LastUpdateTime = getLastUpdateTime(state);
-      return postTime > LastUpdateTime;
+      const lastUpdateTime = getLastUpdateTime(state);
+      return postTime > lastUpdateTime;
     });
     const postsWithId = postsNormalize(postsArr);
     state.posts = [...postsWithId, ...state.posts];
