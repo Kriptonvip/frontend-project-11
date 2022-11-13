@@ -27,12 +27,10 @@ const getPosts = (doc) => {
     const title = item.querySelector('title').textContent;
     const link = item.querySelector('link').textContent;
     const description = item.querySelector('description').textContent;
-    const pubDate = item.querySelector('pubDate').textContent;
     return {
       title,
       link,
       description,
-      // pubDate: new Date(pubDate).getTime(),
     };
   });
   return posts;

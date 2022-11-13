@@ -10,8 +10,8 @@ const iter = (state) => state.feeds.forEach((feed) => {
     if (data instanceof Error) {
       throw new Error(data);
     }
-    const newPostsList = data.posts.filter((post) => {
-      const { link } = post;
+    const newPostsList = data.posts.filter((item) => {
+      const { link } = item;
       const postsUrlList = state.posts.map((post) => post.link);
       return !postsUrlList.includes(link);
     });
