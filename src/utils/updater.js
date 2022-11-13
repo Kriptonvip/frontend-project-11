@@ -1,10 +1,6 @@
 import parser from './parser';
 import postsNormalize from './postsNormalize';
 
-// const getLastUpdateTime = (state) => {
-//   const pubTimeList = state.posts.map((post) => post.pubDate);
-//   return Math.max(...pubTimeList);
-// };
 const iter = (state) => state.feeds.forEach((feed) => {
   parser(feed.url).then((data) => {
     if (data instanceof Error) {
