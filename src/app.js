@@ -4,14 +4,37 @@ import * as yup from 'yup';
 import { uniqueId } from 'lodash';
 import ru from './locales/ru';
 import render from './view';
-import addNewChannel from './utils/addNewChannel';
 import parser from './utils/parser';
 
-export const postsNormalize = (posts) => posts.map((post) => {
+
+const postsNormalize = (posts) => posts.map((post) => {
   post.id = uniqueId();
   post.linkClass = 'fw-bold';
   return post;
 });
+
+const addNewFeed = (url, state) => {
+  parser(url).then((data) => {
+    const { feed, posts } = data;
+    state.feeds.unshift(feed);
+    const postsWithId = postsNormalize(posts);
+    state.posts = [...postsWithId, ...state.posts];
+    state.status = 'success';
+  })
+    .catch((err) => {
+      if (err.isAxiosError) {
+        state.error = 'network';
+      } else if (err.isParsingError) {
+        state.error = 'parsing';
+      } else {
+        state.error = 'unknown';
+      }
+      state.error = 'failure';
+    })
+    .finally(() => {
+      state.status = 'done';
+    });
+};
 
 const updateIter = (state) => state.feeds.forEach((feed) => {
   parser(feed.url).then((data) => {
@@ -81,7 +104,7 @@ export default async () => {
     const schema = yup.string().required().url().notOneOf(urls);
     const url = formData.get('url');
     schema.validate(url).then((value) => {
-      addNewChannel(value, state);
+      addNewFeed(value, state);
     })
       .catch((err) => {
         const { errors } = err;
