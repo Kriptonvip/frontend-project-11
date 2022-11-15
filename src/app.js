@@ -1,10 +1,40 @@
 import onChange from 'on-change';
 import i18next from 'i18next';
 import * as yup from 'yup';
+import { uniqueId } from 'lodash';
 import ru from './locales/ru';
 import render from './view';
 import addNewChannel from './utils/addNewChannel';
-import { updater } from './utils/updater';
+import parser from './utils/parser';
+
+export const postsNormalize = (posts) => posts.map((post) => {
+  post.id = uniqueId();
+  post.linkClass = 'fw-bold';
+  return post;
+});
+
+const updateIter = (state) => state.feeds.forEach((feed) => {
+  parser(feed.url).then((data) => {
+    if (data instanceof Error) {
+      throw new Error(data);
+    }
+    const newPostsList = data.posts.filter((item) => {
+      const { link } = item;
+      const postsUrlList = state.posts.map((post) => post.link);
+      return !postsUrlList.includes(link);
+    });
+    const postsWithId = postsNormalize(newPostsList);
+    state.posts = [...postsWithId, ...state.posts];
+  }).catch((error) => {
+    console.log(`Updater error ${error}`);
+  });
+});
+
+const updater = (state) => {
+  new Promise(() => {
+    updateIter(state);
+  }).then(setTimeout(() => updater(state), 5000));
+};
 
 export default async () => {
   const i18nextInstance = i18next.createInstance();
