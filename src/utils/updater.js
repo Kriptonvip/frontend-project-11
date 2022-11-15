@@ -1,5 +1,5 @@
-import parser from './parser';
 import { uniqueId } from 'lodash';
+import parser from './parser';
 
 const postsNormalize = (posts) => posts.map((post) => {
   post.id = uniqueId();

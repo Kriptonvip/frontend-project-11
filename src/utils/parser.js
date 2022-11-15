@@ -1,4 +1,4 @@
-import getResponse from './getData'
+import getResponse from './getData';
 
 const getFeedDescriptoin = (doc) => {
   const feedName = doc.querySelector('title').textContent;
