@@ -1,5 +1,5 @@
 import parse from './parser';
-import postsNormalize from './postsNormalize';
+import { postsNormalize } from './updater';
 
 export default (url, state) => {
   parse(url).then((data) => {

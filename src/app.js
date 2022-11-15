@@ -4,8 +4,7 @@ import * as yup from 'yup';
 import ru from './locales/ru';
 import render from './view';
 import addNewChannel from './utils/addNewChannel';
-import writeToModal from './utils/modal';
-import updater from './utils/updater';
+import { updater } from './utils/updater';
 
 export default async () => {
   const i18nextInstance = i18next.createInstance();
@@ -63,7 +62,9 @@ export default async () => {
   elements.posts.addEventListener('click', (e) => {
     if (e.target.type === 'button') {
       const { id } = e.target.dataset;
-      writeToModal(id, state);
+      const currentPostIndex = state.posts.findIndex((post) => post.id === id);
+      state.UIState.currentPost = state.posts[currentPostIndex];
+      state.posts[currentPostIndex].linkClass = 'fw-normal';
     }
   });
   updater(state);

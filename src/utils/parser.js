@@ -1,20 +1,5 @@
-import axios from 'axios';
+import getResponse from './getData'
 
-const getProxyUrl = (url) => {
-  const proxiedUrl = new URL('/get', 'https://allorigins.hexlet.app');
-  proxiedUrl.searchParams.set('disableCache', 'true');
-  proxiedUrl.searchParams.set('url', url);
-  return proxiedUrl;
-};
-
-const getResponse = (url) => {
-  const allOriginUrl = getProxyUrl(url);
-  return axios({
-    method: 'get',
-    url: allOriginUrl,
-    responseType: 'text',
-  });
-};
 const getFeedDescriptoin = (doc) => {
   const feedName = doc.querySelector('title').textContent;
   const description = doc.querySelector('description').textContent;

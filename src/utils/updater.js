@@ -1,5 +1,11 @@
 import parser from './parser';
-import postsNormalize from './postsNormalize';
+import { uniqueId } from 'lodash';
+
+const postsNormalize = (posts) => posts.map((post) => {
+  post.id = uniqueId();
+  post.linkClass = 'fw-bold';
+  return post;
+});
 
 const iter = (state) => state.feeds.forEach((feed) => {
   parser(feed.url).then((data) => {
@@ -24,4 +30,4 @@ const updater = (state) => {
   }).then(setTimeout(() => updater(state), 5000));
 };
 
-export default updater;
+export { updater, postsNormalize };
