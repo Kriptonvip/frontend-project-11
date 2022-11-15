@@ -6,7 +6,6 @@ import ru from './locales/ru';
 import render from './view';
 import parser from './utils/parser';
 
-
 const postsNormalize = (posts) => posts.map((post) => {
   post.id = uniqueId();
   post.linkClass = 'fw-bold';
