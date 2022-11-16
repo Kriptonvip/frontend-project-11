@@ -120,8 +120,9 @@ export default async () => {
     if (e.target.type === 'button') {
       const { id } = e.target.dataset;
       const currentPostIndex = state.posts.findIndex((post) => post.id === id);
-      state.UIState.currentPost = state.posts[currentPostIndex];
-      state.UIState.viewedPosts.add(id);
+      const viewedPosts = new Set([...state.UIState.viewedPosts]).add(id);
+      const currentPost = state.posts[currentPostIndex];
+      state.UIState = { currentPost, viewedPosts };
     }
   });
   updater(state);

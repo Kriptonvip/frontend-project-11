@@ -61,7 +61,7 @@ const modalRender = (elements, value) => {
   console.log(value);
   const {
     title, link, description, id,
-  } = value;
+  } = value.currentPost;
   elements.modalTitle.textContent = title;
   elements.modalBody.textContent = description;
   elements.readFullPost.href = link;
@@ -90,10 +90,8 @@ const render = (elements, i18next) => (path, value) => {
     case 'posts':
       postsRender(elements, value);
       break;
-    case 'UIState.currentPost':
+    case 'UIState':
       modalRender(elements, value);
-      break;
-    case 'UIState.viewedPosts':
       break;
     default:
       throw new Error(`Unknown path: ${path}`);
