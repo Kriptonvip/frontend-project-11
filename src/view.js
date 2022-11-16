@@ -16,8 +16,9 @@ const feedRender = (elements, feeds) => {
 const postsRender = (elements, posts) => {
   const postsHtml = posts.map((post) => {
     const {
-      linkClass, link, id, title,
+      isViewed, link, id, title,
     } = post;
+    const linkClass = isViewed ? 'fw-normal' : 'fw-bold';
     return (
       `<li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0">
         <a href="${link}" class="${linkClass}" data-id="${id}" target="_blank" rel="noopener noreferrer">
@@ -57,6 +58,7 @@ const formRender = (elements, value, i18next) => {
 };
 
 const modalRender = (elements, value) => {
+  console.log(value);
   const {
     title, link, description, id,
   } = value;
@@ -91,7 +93,7 @@ const render = (elements, i18next) => (path, value) => {
     case 'UIState.currentPost':
       modalRender(elements, value);
       break;
-    case path.match(/posts\.\d\.linkClass/).input:
+    case 'UIState.viewedPosts':
       break;
     default:
       throw new Error(`Unknown path: ${path}`);

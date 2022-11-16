@@ -6,18 +6,24 @@ import ru from './locales/ru';
 import render from './view';
 import parser from './utils/parser';
 
-const postsNormalize = (posts) => posts.map((post) => {
-  post.id = uniqueId();
-  post.linkClass = 'fw-bold';
-  return post;
-});
+const addPosts = (posts, state) => {
+  const newPosts = posts.map((post) => {
+    post.id = uniqueId();
+    post.isViewed = false;
+    return post;
+  });
+  const markViwedPosts = state.posts.map((post) => {
+    post.isViewed = state.UIState.viewedPosts.has(post.id);
+    return post;
+  });
+  state.posts = [...newPosts, ...markViwedPosts];
+};
 
 const addNewFeed = (url, state) => {
   parser(url).then((data) => {
     const { feed, posts } = data;
     state.feeds.unshift(feed);
-    const postsWithId = postsNormalize(posts);
-    state.posts = [...postsWithId, ...state.posts];
+    addPosts(posts, state);
     state.status = 'success';
   })
     .catch((err) => {
@@ -45,8 +51,7 @@ const updateIter = (state) => state.feeds.forEach((feed) => {
       const postsUrlList = state.posts.map((post) => post.link);
       return !postsUrlList.includes(link);
     });
-    const postsWithId = postsNormalize(newPostsList);
-    state.posts = [...postsWithId, ...state.posts];
+    addPosts(newPostsList, state);
   }).catch((error) => {
     console.log(`Updater error ${error}`);
   });
@@ -82,7 +87,7 @@ export default async () => {
     feeds: [],
     posts: [],
     error: null,
-    UIState: { currentPost: null },
+    UIState: { currentPost: null, viewedPosts: new Set() },
   }, render(elements, i18nextInstance));
 
   yup.setLocale({
@@ -116,7 +121,7 @@ export default async () => {
       const { id } = e.target.dataset;
       const currentPostIndex = state.posts.findIndex((post) => post.id === id);
       state.UIState.currentPost = state.posts[currentPostIndex];
-      state.posts[currentPostIndex].linkClass = 'fw-normal';
+      state.UIState.viewedPosts.add(id);
     }
   });
   updater(state);
