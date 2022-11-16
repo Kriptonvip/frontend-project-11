@@ -58,7 +58,6 @@ const formRender = (elements, value, i18next) => {
 };
 
 const modalRender = (elements, value) => {
-  console.log(value);
   const {
     title, link, description, id,
   } = value.currentPost;
