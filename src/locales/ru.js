@@ -7,5 +7,8 @@ export default {
     network: 'Ошибка сети',
     parsing: 'Ресурс не содержит валидный RSS',
     unknown: 'Неизвестная ошибка',
+    viewData: {
+      preview: 'Просмотр',
+    },
   },
 };

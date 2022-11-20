@@ -1,37 +1,48 @@
+import onChange from 'on-change';
+
 const feedRender = (elements, feeds) => {
-  const feedsHtml = feeds.map((feed) => `
-  <li class="list-group-item border-0 border-end-0">
-  <h3 class="h6 m-0">${feed.title}</h3>
-  <p class="m-0 small text-black-50">${feed.description}</p>
-  </li>`).join('');
-  elements.feeds.innerHTML = `<div class="card border-0">
-  <div class="card-body">
-      <h2 class="card-title h4">Фиды</h2>
-  </div>
-  <ul class="list-group border-0 rounded-0">
-      ${feedsHtml}
-  </ul>
-</div>`;
+  elements.feeds.classList.remove('d-none');
+  const feedsUl = elements.feeds.querySelector('#feedsUl');
+  feedsUl.textContent = '';
+  feeds.forEach((feed) => {
+    const { title, description } = feed;
+    const liEl = document.createElement('li');
+    liEl.classList.add('list-group-item', 'border-0', 'border-end-0');
+    const h3El = document.createElement('h3');
+    h3El.classList.add('h6', 'm-0');
+    h3El.textContent = title;
+    const pEl = document.createElement('p');
+    pEl.textContent = description;
+    pEl.classList.add('m-0', 'small', 'text-black-50');
+    liEl.append(h3El, pEl);
+    feedsUl.append(liEl);
+  });
 };
-const postsRender = (elements, posts) => {
-  const postsHtml = posts.map((post) => {
-    const {
-      isViewed, link, id, title,
-    } = post;
+const postsRender = (elements, posts, i18next, state) => {
+  elements.posts.classList.remove('d-none');
+  const postsUl = elements.posts.querySelector('#postsUl');
+  postsUl.textContent = '';
+  posts.forEach((post) => {
+    const { link, id, title } = post;
+    const isViewed = state.UIState.viewedPosts.has(post.id);
+    const li = document.createElement('li');
+    li.classList.add('d-flex', 'justify-content-between', 'align-items-start', 'mb-3');
     const linkClass = isViewed ? 'fw-normal' : 'fw-bold';
-    return (
-      `<li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0">
-        <a href="${link}" class="${linkClass}" data-id="${id}" target="_blank" rel="noopener noreferrer">
-        ${title}
-        </a>
-        <button type="button" class="btn btn-outline-primary btn-sm" data-id="${id}" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button>
-      </li>`
-    );
-  }).join('');
-  elements.posts.innerHTML = `<div class="card-body">
-  <h2 class="card-title h4">Посты</h2>
-  </div>
-  <ul class="list-group border-0 rounded-0">${postsHtml}</ul>`;
+    const linkEl = document.createElement('a');
+    linkEl.classList.add(linkClass);
+    linkEl.href = link;
+    linkEl.textContent = title;
+    linkEl.dataset.id = id;
+    const button = document.createElement('button');
+    button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    button.setAttribute('data-bs-toggle', 'modal');
+    button.setAttribute('data-bs-target', '#modal');
+    button.setAttribute('type', 'button');
+    button.textContent = i18next.t('viewData.preview');
+    button.dataset.id = id;
+    li.append(linkEl, button);
+    postsUl.append(li);
+  });
 };
 
 const formRender = (elements, value, i18next) => {
@@ -67,33 +78,38 @@ const modalRender = (elements, value) => {
   document.querySelector(`a[data-id="${id}"]`).classList.remove('fw-bold');
   document.querySelector(`a[data-id="${id}"]`).classList.add('fw-normal');
 };
-const render = (elements, i18next) => (path, value) => {
-  switch (path) {
-    case 'status':
-    case 'error':
-      if (value === 'done') {
-        elements.input.readOnly = false;
-        elements.formButton.disabled = false;
-        elements.input.focus();
-        elements.input.value = '';
-      } else if (value === 'pending') {
-        elements.input.readOnly = true;
-        elements.formButton.disabled = true;
-      } else {
-        formRender(elements, value, i18next);
-      }
-      break;
-    case 'feeds':
-      feedRender(elements, value);
-      break;
-    case 'posts':
-      postsRender(elements, value);
-      break;
-    case 'UIState':
-      modalRender(elements, value);
-      break;
-    default:
-      throw new Error(`Unknown path: ${path}`);
-  }
+
+const createWatchedState = (state, elements, i18next) => {
+  const watchedState = onChange(state, (path, value) => {
+    switch (path) {
+      case 'getingDataStatus':
+      case 'error':
+        if (value === 'done') {
+          elements.input.readOnly = false;
+          elements.formButton.disabled = false;
+          elements.input.focus();
+          elements.input.value = '';
+        } else if (value === 'pending') {
+          elements.input.readOnly = true;
+          elements.formButton.disabled = true;
+        } else {
+          formRender(elements, value, i18next);
+        }
+        break;
+      case 'feeds':
+        feedRender(elements, value);
+        break;
+      case 'posts':
+        postsRender(elements, value, i18next, state);
+        break;
+      case 'UIState':
+        modalRender(elements, value);
+        break;
+      default:
+        throw new Error(`Unknown path: ${path}`);
+    }
+  });
+  return watchedState;
 };
-export default render;
+
+export default createWatchedState;

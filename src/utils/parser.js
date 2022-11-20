@@ -1,5 +1,3 @@
-import getResponse from './getData';
-
 const getFeedDescriptoin = (doc) => {
   const feedName = doc.querySelector('title').textContent;
   const description = doc.querySelector('description').textContent;
@@ -21,7 +19,7 @@ const getPosts = (doc) => {
   return posts;
 };
 
-export default (url) => getResponse(url).then((response) => {
+export default (response, url) => {
   const data = JSON.parse(response.data).contents;
   const parser = new DOMParser();
   const doc = parser.parseFromString(data, 'application/xml');
@@ -33,6 +31,5 @@ export default (url) => getResponse(url).then((response) => {
   const posts = getPosts(doc);
   const feed = getFeedDescriptoin(doc);
   feed.url = url;
-
   return { feed, posts };
-});
+};
