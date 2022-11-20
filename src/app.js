@@ -33,7 +33,6 @@ export default async () => {
   };
 
   const watchedState = createWatchedState(state, elements, i18nextInstance);
-  console.log(watchedState);
   yup.setLocale({
     mixed: {
       required: () => 'required',

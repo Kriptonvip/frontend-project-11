@@ -60,9 +60,12 @@ export const updater = (state) => {
       });
       addPosts(newPostsList, state);
     });
-  });
-
-  setTimeout(() => updater(state), 5000);
+  }).catch((error) => {
+    console.log(`Updater ${error.isParsingError ? 'parsing Error' : error}`);
+  })
+    .finally(() => {
+      setTimeout(() => updater(state), 5000);
+    });
 };
 
 export default addNewFeed;
